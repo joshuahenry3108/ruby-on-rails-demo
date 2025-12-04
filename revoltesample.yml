@@ -1,0 +1,40 @@
+revolte:
+  version: "1.0"
+  project: "instagram"
+  appName: "order"
+  env:
+    qa:
+      branch: "main"
+      services:
+        rid_1:
+          name: "order-service"
+          type: "WEB_SERVICE"
+          entryPoint: "config.ru"
+          specifications:
+            cpu: 2
+            memory: 2
+            storage: 30
+          properties:
+            health: "/health"
+            port: 3000
+            preScript:
+                      - bundle exec rails db:migrate  
+                      - bundle exec rails db:seed     
+            variables:
+              RAILS_MASTER_KEY: "a8995b446917058172c313502da2f449"
+              DATABASE_URL: "#{userDatabase.dbUrl}"
+              DATABASE_PORT: "#{userDatabase.dbPort}"
+              DATABASE_USERNAME: "#{userDatabase.dbUsername}"
+              DATABASE_PASSWORD: "#{userDatabase.dbPassword}"
+              DATABASE_NAME: "#{userDatabase.dbName}"
+              DATABASE_CONNECTION_STRING: "#{userDatabase.dbConnectionString}"
+              PORT: 3000
+                
+        rid_2:
+            name: "userDatabase"
+            type: "DATABASE"
+            specifications:
+              engine: "mysql"
+              cpu: 2
+              memory: 1
+              storage: 20
